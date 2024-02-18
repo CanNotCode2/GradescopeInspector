@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Premain-Class: org.gradeskope.agent.TestJavaAgent
+Agent-Class: org.gradeskope.agent.TestJavaAgent
+Can-Retransform-Classes: true

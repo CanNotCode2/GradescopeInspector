@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'org.gradescope.agent'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'junit:junit:4.13.1'
+
+    implementation 'org.javassist:javassist:3.29.2-GA'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        def manifestFile = "${projectDir}/resources/META-INF/MANIFEST.MF"
+        if ( new File( manifestFile ).exists() )
+            from ( manifestFile )
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Manifest-Version': '1.0'
+        attributes 'Premain-Class': 'org.gradeskope.agent.TestJavaAgent'
+        attributes 'Agent-Class': 'org.gradeskope.agent.TestJavaAgent'
+        attributes 'Can-Retransform-Classes': 'true'
+    }
+}
+
+
+shadowJar {
+    archiveBaseName.set("GradescopeAgent")
+    archiveClassifier.set('')
+    archiveVersion.set(version)
+}
+
