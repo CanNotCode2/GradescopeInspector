@@ -12,6 +12,8 @@ dependencies {
     implementation 'net.bytebuddy:byte-buddy-agent:1.14.4'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'junit:junit:4.13.1'
+    implementation 'junit:junit:4.13.1'
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
