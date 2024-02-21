@@ -2,14 +2,14 @@ package gradeskope;
 
 public class Main {
 
-    // Testing Entrypoint
-    public static void main(String[] args) {
-        System.out.println("Testing Entrypoint");
+  // Testing Entrypoint
+  public static void main(String[] args) {
+    System.out.println("Testing Entrypoint");
 
-        ThinkOfNameLater thinkOfNameLater = new ThinkOfNameLater(false, true, true);
-        thinkOfNameLater.run();
+    AgentManager agentManager = new AgentManager(false, true, true);
+    agentManager.run();
 
-        // Create a new empty tree.
+    // Create a new empty tree.
 //        SelfBalancingBST<Integer> avl_bst = new AVLTree<Integer>();
 //
 //        // Insert 50 random integers.
@@ -32,5 +32,5 @@ public class Main {
 //        }
 //
 //        System.out.println(avl_bst.height());
-    }
+  }
 }
