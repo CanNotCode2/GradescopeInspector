@@ -1,8 +1,7 @@
-package org.gradeskope.utils;
+package gradeskope.http;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class CurlFileUploader implements FileUploader {
   public CurlFileUploader(String url, String[] headers, File binaryFile) {
@@ -11,7 +10,8 @@ public class CurlFileUploader implements FileUploader {
     Process process = null;
     try {
       process = processBuilder.start();
-    } catch (IOException e) {
+      process.waitFor();
+    } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }
     int exitCode = process.exitValue();

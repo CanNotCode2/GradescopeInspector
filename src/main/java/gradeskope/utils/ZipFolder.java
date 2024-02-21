@@ -1,4 +1,4 @@
-package org.gradeskope.utils;
+package gradeskope.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 
 public class ZipFolder {
 

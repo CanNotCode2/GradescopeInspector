@@ -1,4 +1,4 @@
-package org.gradeskope.utils;
+package gradeskope.utils;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;

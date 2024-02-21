@@ -1,4 +1,4 @@
-package org.gradeskope;
+package gradeskope;
 
 public class Main {
 
@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Testing Entrypoint");
 
-        ThinkOfNameLater thinkOfNameLater = new ThinkOfNameLater(true, true, true);
+        ThinkOfNameLater thinkOfNameLater = new ThinkOfNameLater(false, true, true);
         thinkOfNameLater.run();
 
         // Create a new empty tree.

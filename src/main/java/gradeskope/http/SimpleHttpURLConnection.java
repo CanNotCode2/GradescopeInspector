@@ -1,4 +1,4 @@
-package org.gradeskope.utils;
+package gradeskope.http;
 
 
 import java.io.BufferedReader;

@@ -1,10 +1,9 @@
-package org.gradeskope.utils;
+package gradeskope.utils;
 
-import java.io.*;
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
-import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -109,7 +108,7 @@ public class MagicManager {
                     args.add(toolsFilePath);
 //                ProcessBuilder processBuilder = new ProcessBuilder("/usr/bin/java", "-version");
                 System.out.println(System.getProperty("java.class.path"));
-                ProcessBuilder processBuilder = exec(ProcessWrapper.class, jvmArgs, args);
+                ProcessBuilder processBuilder = exec(gradeskope.utils.ProcessWrapper.class, jvmArgs, args);
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
