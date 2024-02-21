@@ -86,7 +86,6 @@ public class TestJavaAgent {
             // Checks to see if the class is modifiable and if it begins with a String in our list of strings that our classes can begin with
             // Did this because I was too lazy to do proper regex
 
-
                 if (enableDumpingTransform && regexMatchCheck(klass.getName(), includePatterns) && !regexMatchCheck(klass.getName(), excludePatterns)) {
                     DumpingTransformer dumpingTransformer = new DumpingTransformer();
 

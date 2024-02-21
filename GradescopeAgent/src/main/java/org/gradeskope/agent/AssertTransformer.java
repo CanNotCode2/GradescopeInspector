@@ -1,6 +1,7 @@
 package org.gradeskope.agent;
 
 
+import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -28,7 +29,7 @@ public class AssertTransformer implements ClassFileTransformer
         if (className.equals("org/junit/Assert")) {
             System.out.println("Transforming: " + className);
             try {
-                return transformJunitAsserts();
+                return transformJunitAsserts(classBeingRedefined);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -43,8 +44,9 @@ public class AssertTransformer implements ClassFileTransformer
         return classfileBuffer;
     }
 
-    private byte[] transformJunitAsserts() throws Exception {
+    private byte[] transformJunitAsserts(Class<?> classBeingRedefined) throws Exception {
         ClassPool pool = ClassPool.getDefault();
+        pool.appendSystemPath();
         CtClass cc = pool.get("org.junit.Assert");
         for (CtMethod ctMethod : cc.getMethods()) {
             if (stringStartsWithStringArray(ctMethod.getName(), methodStartsWithList)) {

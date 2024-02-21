@@ -32,8 +32,6 @@ public class TestTransformer implements ClassFileTransformer
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        } else if (className.equals("ex10Grader/src/edu/unc/ex10/tests/BinaryHeapTests")) {
-            System.out.println("Testing This: " + className);
         }
         return classfileBuffer;
     }
@@ -42,7 +40,7 @@ public class TestTransformer implements ClassFileTransformer
         ClassPool pool = ClassPool.getDefault();
         CtClass cc = pool.get("org.junit.Assert");
         for (CtMethod ctMethod : cc.getMethods()) {
-            if (stringStartsWithStringArray(ctMethod.getName(), methodStartsWithList)) {
+            if (startsWithAny(ctMethod.getName(), methodStartsWithList)) {
                 ctMethod.setBody("return;");
             }
         }
@@ -61,7 +59,7 @@ public class TestTransformer implements ClassFileTransformer
         return cc.toBytecode();
     }
 
-    private static boolean stringStartsWithStringArray(String string, String[] strings) {
+    private static boolean startsWithAny(String string, String[] strings) {
         for (String arrayString : strings) {
             if (string.startsWith(arrayString)) {
                 return true;
