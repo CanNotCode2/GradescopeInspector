@@ -46,7 +46,6 @@ bin/
 *.zip
 
 ### Target Code/Project, should not be included in git
-src/main/java/com/
 
 ### Gradle
 gradle/
