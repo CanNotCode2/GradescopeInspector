@@ -27,6 +27,14 @@ public class TestJavaAgent {
       Pattern.compile("^java")
   };
 
+  public static Pattern[] testTransformExcludes = {
+      Pattern.compile("^sun.security"),
+      Pattern.compile("^sun.reflect"),
+      Pattern.compile("^java"),
+      Pattern.compile("^org.junit"),
+      Pattern.compile("junit.framework"),
+  };
+
   public static void premain(String agentArgs, Instrumentation inst) {
     System.out.println("Args: " + agentArgs);
 
@@ -85,7 +93,7 @@ public class TestJavaAgent {
         // Did this because I was too lazy to do proper regex
 
         if (enableDumpingTransform && regexMatchCheck(klass.getName(), includePatterns) &&
-            !regexMatchCheck(klass.getName(), excludePatterns)) {
+            !regexMatchCheck(klass.getName(), testTransformExcludes)) {
           DumpingTransformer dumpingTransformer = new DumpingTransformer();
 
           //I don't know why we need to add true as a second argument, but it made it work, so...
@@ -101,7 +109,7 @@ public class TestJavaAgent {
         }
 
         if (enableAssertTransform && klass.getName().equals("org.junit.Assert") &&
-            !regexMatchCheck(klass.getName(), excludePatterns)) {
+            !regexMatchCheck(klass.getName(), testTransformExcludes)) {
           AssertTransformer assertTransformer = new AssertTransformer();
 
           //I don't know why we need to add true as a second argument, but it made it work, so...
@@ -116,12 +124,10 @@ public class TestJavaAgent {
           }
         }
 
-        if (enableTestTransform &&
-            klass.getName().equals("ex10Grader.src.edu.unc.ex10.tests.BinaryHeapTests") &&
-            !regexMatchCheck(klass.getName(), excludePatterns)) {
+        if (enableTestTransform && !regexMatchCheck(klass.getName(), testTransformExcludes)) {
           TestTransformer testTransformer = new TestTransformer();
 
-          inst.addTransformer(testTransformer);
+          inst.addTransformer(testTransformer, true);
 
           try {
             inst.retransformClasses(klass);

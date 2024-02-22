@@ -18,7 +18,7 @@ public class AssertTransformer implements ClassFileTransformer {
 
   private static final String outputPathPrefix = "/tmp/javaroot/";
 
-  private static final String[] methodStartsWithList = {"assertThrows", "fail"};
+//  private static final String[] methodStartsWithList = {"assertThrows", "fail"};
       // The only two methods that throw AssertionError
 
   private static boolean stringStartsWithStringArray(String string, String[] strings) {
@@ -52,7 +52,15 @@ public class AssertTransformer implements ClassFileTransformer {
 
     CtClass cc = pool.get("org.junit.Assert");
     for (CtMethod ctMethod : cc.getMethods()) {
-      if (stringStartsWithStringArray(ctMethod.getName(), methodStartsWithList)) {
+      // Throws AssertionError
+      if (ctMethod.getLongName() == "org.junit.Assert.assertThrows(java.lang.String,java.lang.Class,org.junit.function.ThrowingRunnable)") {
+        ctMethod.setBody("return $1;");
+        // Throws ComparisonFailure
+      } else if (ctMethod.getName().startsWith("assertEquals")) {
+        ctMethod.setBody("return;");
+      }
+      // Throws AssertionError
+      else if (ctMethod.getName().startsWith("fail")) {
         ctMethod.setBody("return;");
       }
 

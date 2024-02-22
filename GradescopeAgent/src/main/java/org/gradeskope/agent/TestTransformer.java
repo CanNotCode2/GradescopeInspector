@@ -10,6 +10,7 @@ import java.security.ProtectionDomain;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.LoaderClassPath;
 
 public class TestTransformer implements ClassFileTransformer {
 
@@ -31,10 +32,10 @@ public class TestTransformer implements ClassFileTransformer {
   public byte[] transform(ClassLoader loader, String className,
                           Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
                           byte[] classfileBuffer) throws IllegalClassFormatException {
-    if (className.equals("org/junit/Assert")) {
-      System.out.println("Transforming: " + className);
+    if (className != null) {
+      System.out.println("Looking through: " + className);
       try {
-        return transformJUnitTests();
+        return transformJUnitTests(className);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -42,11 +43,12 @@ public class TestTransformer implements ClassFileTransformer {
     return classfileBuffer;
   }
 
-  private byte[] transformJUnitTests() throws Exception {
+  private byte[] transformJUnitTests(String className) throws Exception {
     ClassPool pool = ClassPool.getDefault();
-    CtClass cc = pool.get("org.junit.Assert");
+    pool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
+    CtClass cc = pool.get(className.replace("/", "."));
     for (CtMethod ctMethod : cc.getMethods()) {
-      if (startsWithAny(ctMethod.getName(), methodStartsWithList)) {
+      if (ctMethod.hasAnnotation("org.junit.Test")) {
         ctMethod.setBody("return;");
       }
     }
