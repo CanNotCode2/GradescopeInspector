@@ -53,8 +53,14 @@ public class AssertTransformer implements ClassFileTransformer {
     CtClass cc = pool.get("org.junit.Assert");
     for (CtMethod ctMethod : cc.getMethods()) {
       // Throws AssertionError
-      if (ctMethod.getLongName() == "org.junit.Assert.assertThrows(java.lang.String,java.lang.Class,org.junit.function.ThrowingRunnable)") {
-        ctMethod.setBody("return $1;");
+      if (ctMethod.getLongName().equals(
+          "org.junit.Assert.assertThrows(java.lang.String,java.lang.Class,org.junit.function.ThrowingRunnable)")) {
+        ctMethod.insertBefore(
+        "try { " +
+              "$3.run(); " +
+            "} catch (Throwable var99) { " +
+              "return var99; " +
+            "}");
         // Throws ComparisonFailure
       } else if (ctMethod.getName().startsWith("assertEquals")) {
         ctMethod.setBody("return;");

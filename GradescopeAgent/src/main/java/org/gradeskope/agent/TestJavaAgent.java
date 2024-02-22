@@ -96,7 +96,7 @@ public class TestJavaAgent {
             !regexMatchCheck(klass.getName(), testTransformExcludes)) {
           DumpingTransformer dumpingTransformer = new DumpingTransformer();
 
-          //I don't know why we need to add true as a second argument, but it made it work, so...
+          // For this to work apparently we need to allow our transformers to re-transform
           inst.addTransformer(dumpingTransformer, true);
 
           try {
@@ -109,10 +109,9 @@ public class TestJavaAgent {
         }
 
         if (enableAssertTransform && klass.getName().equals("org.junit.Assert") &&
-            !regexMatchCheck(klass.getName(), testTransformExcludes)) {
+            !regexMatchCheck(klass.getName(), excludePatterns)) {
           AssertTransformer assertTransformer = new AssertTransformer();
 
-          //I don't know why we need to add true as a second argument, but it made it work, so...
           inst.addTransformer(assertTransformer, true);
 
           try {
