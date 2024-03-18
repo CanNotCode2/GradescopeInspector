@@ -24,7 +24,8 @@ public class TestJavaAgent {
 //        Pattern.compile("java.lang.VerifyError"),
       Pattern.compile("^sun.security"),
       Pattern.compile("^sun.reflect"),
-      Pattern.compile("^java")
+      Pattern.compile("^java"),
+      Pattern.compile("^org.gradeskope")
   };
 
   public static Pattern[] testTransformExcludes = {
@@ -32,7 +33,9 @@ public class TestJavaAgent {
       Pattern.compile("^sun.reflect"),
       Pattern.compile("^java"),
       Pattern.compile("^org.junit"),
-      Pattern.compile("junit.framework"),
+      Pattern.compile("^junit.framework"),
+      Pattern.compile("^org.gradeskope"),
+      Pattern.compile("^jdk.internal")
   };
 
   public static void premain(String agentArgs, Instrumentation inst) {

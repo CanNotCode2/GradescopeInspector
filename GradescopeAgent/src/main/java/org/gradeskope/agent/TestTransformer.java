@@ -56,9 +56,9 @@ public class TestTransformer implements ClassFileTransformer {
 
     try {
       Files.createDirectories(
-          new File(outputPathPrefix + "temp/" + "org#Junit$Assert").getParentFile()
+          new File(outputPathPrefix + "temp/" + className + ".class").getParentFile()
               .toPath()); // Make sure Parent directory exists
-      FileOutputStream fos = new FileOutputStream(outputPathPrefix + "temp/" + "Assert" + ".class");
+      FileOutputStream fos = new FileOutputStream(outputPathPrefix + "temp/" + className + ".class");
       fos.write(cc.toBytecode());
 //                    TestJavaAgent.classByteCodes.add(classfileBuffer);
       fos.close();

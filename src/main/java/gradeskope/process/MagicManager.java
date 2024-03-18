@@ -70,7 +70,7 @@ public class MagicManager {
   public static void attachAgentToVM() {
     if (MagicManager.isRemote()) {
 
-      MagicManager.attachAgentToVM(AgentManager.TMP_DIR + "TestJavaAgent_1_0_SNAPSHOT.jar",
+      MagicManager.attachAgentToVM(AgentManager.TMP_DIR + AgentManager.AGENT_JAR,
           AgentManager.AGENT_ARGS);
     } else {
       MagicManager.attachAgentToVM(AgentManager.AGENT_LOCAL_SRC, AgentManager.AGENT_ARGS);
