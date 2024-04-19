@@ -7,6 +7,7 @@ import gradeskope.process.MagicManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -30,8 +31,28 @@ public class AgentManager {
   private boolean enableAssertTransform = false;
   private boolean enableTestTransform = false;
 
+  public static String TARGET_PROCESS_MATCH_STRING = null;
+
+
+  // if targetProcessMatchString == null, program attaches agent to executing process
+  // Otherwise it attaches to the first program that matches string
   public AgentManager(boolean enableDump, boolean enableAssertTransform,
                       boolean enableTestTransform) {
+    this(enableDump, enableAssertTransform, enableTestTransform, false);
+  }
+
+  public AgentManager(boolean enableDump, boolean enableAssertTransform,
+                      boolean enableTestTransform, boolean silent) {
+    this(enableDump, enableAssertTransform, enableTestTransform, silent, null);
+  }
+
+  public AgentManager(boolean enableDump,
+                      boolean enableAssertTransform,
+                      boolean enableTestTransform,
+                      boolean silent,
+                      String targetProcessMatchString) {
+
+    TARGET_PROCESS_MATCH_STRING = targetProcessMatchString;
     this.enableDump = enableDump;
     this.enableAssertTransform = enableAssertTransform;
     this.enableTestTransform = enableTestTransform;
@@ -47,6 +68,11 @@ public class AgentManager {
 
     if (enableTestTransform) {
       AGENT_ARGS = AGENT_ARGS + "--enableTestTransform ";
+    }
+
+    if (silent) {
+      System.setOut(new PrintStream(new NullOutputStream()));
+      AGENT_ARGS = AGENT_ARGS + "--silent";
     }
   }
 

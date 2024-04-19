@@ -1,5 +1,6 @@
 package org.gradeskope.agent;
 
+import java.io.PrintStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class TestJavaAgent {
       enableTestTransform = true;
     }
 
+    if (agentArgs.contains("--silent")) {
+      System.setOut(new PrintStream(new NullOutputStream()));
+    }
+
     System.out.println("Agent Loaded in premain");
 
     // Register our transformer
@@ -70,6 +75,9 @@ public class TestJavaAgent {
   }
 
   public static void agentmain(String agentArgs, Instrumentation inst) {
+    if (agentArgs.contains("--silent")) {
+      System.setOut(new PrintStream(new NullOutputStream()));
+    }
 
     System.out.println("Args: " + agentArgs);
 

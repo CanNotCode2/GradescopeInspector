@@ -97,7 +97,7 @@ public class MagicManager {
     try {
       child = new URLClassLoader(
           new URL[] {toolsJarFile.toURI().toURL()},
-          MagicManager.class.getClassLoader()
+          ProcessWrapper.class.getClassLoader()
       );
     } catch (MalformedURLException e) {
       e.printStackTrace();
@@ -112,7 +112,16 @@ public class MagicManager {
       if (!MagicManager.getJavaVersion().equals("1.8")) {
         List<String> jvmArgs = new ArrayList<String>();
         List<String> args = new ArrayList<String>();
-        args.add(pid);
+        if (AgentManager.TARGET_PROCESS_MATCH_STRING != null) {
+          ProcessFinder processFinder = new Java9UniversalProcessHandler();
+          Long targetPID = processFinder.findTargetPID(AgentManager.TARGET_PROCESS_MATCH_STRING);
+          if (targetPID == null) {
+            throw new RuntimeException("Target PID is null, check the match string and processes running on the system");
+          }
+          args.add(targetPID.toString());
+        } else {
+          args.add(pid);
+        }
         args.add(pathToAgentJar);
         args.add(agentArgs);
         args.add(toolsFilePath);

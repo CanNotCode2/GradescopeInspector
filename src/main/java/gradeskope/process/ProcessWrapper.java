@@ -1,6 +1,8 @@
 package gradeskope.process;
 
+import gradeskope.NullOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,8 +28,8 @@ public class ProcessWrapper {
     }
 
 
+    System.setOut(new PrintStream(new NullOutputStream()));
     System.out.println("Main Process: " + mainProcessID);
-
     System.out.println("Subprocess: " + subProcessID);
 
     try {

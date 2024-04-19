@@ -6,7 +6,12 @@ public class Main {
   public static void main(String[] args) {
     System.out.println("Testing Entrypoint");
 
-    AgentManager agentManager = new AgentManager(false, true, true);
+    AgentManager agentManager = new AgentManager(
+        false,
+        false,
+        true,
+        true,
+        "comp533.RunSemester24Assignment6Tests");
     agentManager.run();
 
     // Create a new empty tree.
