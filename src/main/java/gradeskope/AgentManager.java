@@ -23,10 +23,10 @@ import java.util.Map;
 public class AgentManager {
 
   public static String AGENT_LOCAL_SRC =
-      "/home/user/IdeaProjects/GradescopeInspector2/GradescopeAgent/build/libs/GradescopeAgent-1.1.jar";
+      "/home/user/IdeaProjects/GradescopeInspector2/GradescopeAgent/build/libs/GradescopeAgent-1.2.jar";
   public static String TMP_DIR = "/tmp/javaroot/";
 
-  public static String AGENT_JAR = "GradescopeAgent-1.1.jar";
+  public static String AGENT_JAR = "GradescopeAgent-1.2.jar";
   public static String AGENT_ARGS = "";
   private static Integer instantiationCount = 0;
 
